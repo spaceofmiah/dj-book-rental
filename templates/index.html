@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Book Rental | One Stop Shop For Book Renting</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Titan+One&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+            font-family: "Catamaran", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 400;
+            font-style: normal;
+        }
+        
+        .titan {
+            font-family: "Titan One", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+    </style>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body class="bg-gray-900">
+    <section class="mx-auto w-10/12">
+        <h1 class="text-4xl font-bold text-purple-400 mb-8 titan">Bokr</h1>
+        <div class="md:flex justify-between place-items-center">
+            <div class="mb-8 md:mb-0 text-white">
+                <p class="text-3xl">Revolutionizing Traditional Library & Book Renting</p>
+                <div class="mt-4">
+                    <a href="{% url 'dashboard' %}" class="rounded-sm bg-purple-800 p-1 h-10 w-28 flex place-items-center justify-center font-bold text-purple-200 hover:bg-purple-900 hover:text-purple-100">
+                        Rent Book
+                    </a>
+                </div>
+
+                <div class="mt-4">
+                    <small class="text-gray-500 text-md">
+                        2024 Award-Wining Online Book Store &nbsp; | &nbsp; 1st in IBC  &nbsp;| &nbsp; Over 5,000,000+ books rented
+                    </small>
+                </div>
+            </div>
+            <img src="{% static 'cover.png' %}" alt="" class="grow md:w-1/2">
+        </div>
+    </section>
+    
+    <section class="h-10 w-full bg-gray-700 my-2 p-1 flex place-items-center justify-center">
+        <h2 class="text-gray-400 font-extrabold">Over 5,000,000+ Books Rented</h2>
+    </section>
+
+    <div id="app" class="text-white text-3xl"></div>
+    <script>
+        const { createApp } = Vue
+
+        createApp({
+            data() {
+                return {
+                    message: 'Hello Vue!'
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+</html>

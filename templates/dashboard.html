@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Book Rental | One Stop Shop For Book Renting</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Titan+One&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+            font-family: "Catamaran", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        body.modal-open {
+            overflow: hidden;
+        }
+        
+        .titan {
+            font-family: "Titan One", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+    </style>
+</head>
+<body>
+    <nav class="flex justify-between place-items-center p-1">
+        <h1 class="text-4xl font-bold text-purple-400 titan">Bokr</h1>
+    </nav>
+
+    <section class="flex flex-row border-t-2 border-gray-200">
+        <div id="modalBackdrop" class="fixed inset-0 z-50 bg-black opacity-75 hidden"></div>
+
+        <div id="modal" class="fixed inset-0 flex items-center justify-center z-50 overflow-y-auto hidden">
+            <div class="w-6/12 rounded-md min-h-[250px] bg-white p-8">
+                <h3 class="text-2xl font-bold text-center">Rent Book</h3>
+                
+                <form method="get" class="my-8">
+                    <input type="text" name="book" required id="id_book" placeholder="Search Book" class="border h-10 border-gray-400 w-full p-1 rounded-sm outline-none">
+
+                    <div class="flex justify-between place-items-center gap-4 mt-4">
+                        <input type="email" required name="student" id="id_student" placeholder="Enter student email" class="h-10 border border-gray-400 w-full p-1 rounded-sm outline-none">
+                        <input type="date" required name="month" id="id_month" placeholder="Enter return date" class="h-10 border border-gray-400 w-full p-1 rounded-sm outline-none">
+                    </div>
+                </form>
+
+                <div class="flex justify-between place-items-center">
+                    <p class="text-lg text-red-600 font-thin leading-8 closeModal cursor-pointer" data-modal="modal">Cancel</p>
+
+                    <input type="submit" class="text-sm text-purple-800 cursor-pointer flex justify-center place-items-center font-bold h-8 px-2 p-1 rounded-full bg-purple-200 hover:bg-purple-300" value="Submit" />
+                </div>
+            </div>
+        </div>
+
+        <aside class="hidden md:block w-48">
+            <div class="fixed h-full bg-gray-100 w-48 flex flex-col gap-y-4 justify-between py-24">
+                <div class="flex flex-col gap-y-10 p-4">
+                    <a href="" class="text-sm hover:text-gray-400">Rentage</a>
+                    <a href="" class="text-sm hover:text-gray-400">Students</a>
+                    <a href="" class="text-sm hover:text-gray-400">Analytics <sup>wip</sup></a>
+                    <a href="" class="text-sm hover:text-gray-400">Transactions <sup>wip</sup></a>
+                    <a href="" class="text-sm hover:text-gray-400">Collections <sup>wip</sup></a>
+                </div>
+
+                <div class="flex flex-col gap-y-3 w-full p-4">
+                    <a href="" class="text-sm hover:text-gray-400">Settings <sup>wip</sup></a>
+                    <a href="" class="text-sm text-red-800 font-bold hover:text-red-600">Logout</a>
+                </div>
+            </div>
+        </aside>
+
+        <div class="p-8 md:container grow">
+            <div class="md:p-8">
+                <div class="flex flex-row justify-between place-items-center mb-12">
+                    <h1 class="text-right text-2xl font-bold">Rentages</h1>
+                    <a href="" class="text-sm text-purple-800 flex justify-center place-items-center font-bold h-8 px-2 p-1 rounded-full bg-purple-200 hover:bg-purple-300">New Rental</a>
+                </div>
+                <table class="table-auto min-w-full divide-y divide-gray-200">
+                  <thead>
+                    <tr>
+                      <th class="py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Book Name</th>
+                      <th class="py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student Email</th>
+                      <th class="py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date Rented</th>
+                      <th class="py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Return Date</th>
+                    </tr>
+                  </thead>
+
+                  <tbody class="bg-white divide-y divide-gray-200">
+                    <tr class="hover:bg-gray-100 openModalBtn" data-modal="modal">
+                      <td class="py-4 whitespace-nowrap" data-modal="modal">John Doe</td>
+                      <td class="py-4 whitespace-nowrap" data-modal="modal">john@example.com</td>
+                      <td class="py-4 whitespace-nowrap" data-modal="modal">2024/04/01</td>
+                      <td class="py-4 whitespace-nowrap" data-modal="modal">2024/04/01</td>
+                    </tr>
+                    <tr class="hover:bg-gray-100 openModalBtn">
+                        <td class="py-4 whitespace-nowrap" data-modal="modal">John Doe</td>
+                        <td class="py-4 whitespace-nowrap" data-modal="modal">john@example.com</td>
+                        <td class="py-4 whitespace-nowrap" data-modal="modal">2024/04/01</td>
+                        <td class="py-4 whitespace-nowrap" data-modal="modal">2024/04/01</td>
+                    </tr>
+                    <tr class="hover:bg-gray-100 openModalBtn" data-modal="modal">
+                        <td class="py-4 whitespace-nowrap" data-modal="modal">John Doe</td>
+                        <td class="py-4 whitespace-nowrap" data-modal="modal">john@example.com</td>
+                        <td class="py-4 whitespace-nowrap" data-modal="modal">2024/04/01</td>
+                        <td class="py-4 whitespace-nowrap" data-modal="modal">2024/04/01</td>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
+        </div>          
+    </section>
+
+    <script>
+
+      // Get modal elements
+      const closeModalBtn = document.querySelectorAll('.closeModal');
+      const openModalBtn = document.querySelectorAll('.openModalBtn');
+      const modalBackdrop = document.getElementById('modalBackdrop');
+
+
+      // Function to open modal
+      function openModal(target) {
+        console.log(target, "\n\n")
+        const modal = document.getElementById(target);
+        modal.classList.remove('hidden');
+        modalBackdrop.classList.remove('hidden');
+        document.body.classList.add('modal-open');
+      }
+
+      // Function to close modal
+      function closeModal(target, removeBackdrop=true) {
+        const modal = document.getElementById(target);
+        modal.classList.add('hidden');
+        if (removeBackdrop){
+          modalBackdrop.classList.add('hidden');
+          document.body.classList.remove('modal-open');
+        }
+      }
+
+      openModalBtn.forEach( btn => {
+        btn.addEventListener('click', (event) => {
+            console.log(event.target)
+          const targetModal = event.target.dataset['modal']
+          openModal(targetModal)
+        });
+      })
+
+      closeModalBtn.forEach( btn => {
+        btn.addEventListener('click', (event) => {
+          const targetModal = event.target.dataset['modal']
+          closeModal(targetModal)
+        });
+      })
+    </script>
+</body>
+</html>
