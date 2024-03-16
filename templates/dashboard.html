@@ -36,7 +36,7 @@
 </head>
 <body>
     <nav class="flex justify-between place-items-center p-1">
-        <h1 class="text-4xl font-bold text-purple-400 titan">Bokr</h1>
+        <a href="{% url 'rentals:dashboard' %}" class="text-4xl font-bold text-purple-400 titan">Bokr</a>
     </nav>
 
     <section class="flex flex-row border-t-2 border-gray-200">
@@ -113,7 +113,7 @@
         <aside class="hidden md:block w-48">
             <div class="fixed h-full bg-gray-100 w-48 flex flex-col gap-y-4 justify-between py-24">
                 <div class="flex flex-col gap-y-10 p-4">
-                    <a href="" class="text-sm hover:text-gray-400">Rentage</a>
+                    <a href="" class="text-sm hover:text-gray-400">Rentals</a>
                     <a href="" class="text-sm hover:text-gray-400">Students</a>
                     <a href="" class="text-sm hover:text-gray-400">Analytics <sup>wip</sup></a>
                     <a href="" class="text-sm hover:text-gray-400">Transactions <sup>wip</sup></a>
@@ -130,7 +130,7 @@
         <div class="p-8 md:container grow">
             <div class="md:p-8">
                 <div class="flex flex-row justify-between place-items-center mb-12">
-                    <h1 class="text-right text-2xl font-bold">Rentages</h1>
+                    <h1 class="text-right text-2xl font-bold">Rentals</h1>
                     <a href="" class="text-sm text-purple-800 flex justify-center place-items-center font-bold h-8 px-2 p-1 rounded-full bg-purple-200 hover:bg-purple-300">New Rental</a>
                 </div>
                 <table class="table-auto min-w-full divide-y divide-gray-200">
