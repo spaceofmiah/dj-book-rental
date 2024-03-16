@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_htmx'
+    'rentals.apps.RentalsConfig',
+    'django_htmx',
 ]
 
 MIDDLEWARE = [

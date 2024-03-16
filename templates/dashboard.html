@@ -46,7 +46,7 @@
             <div class="w-10/12 md:w-6/12 rounded-md min-h-[250px] bg-white p-8">
                 <h3 class="text-2xl font-bold text-center">Rent Book</h3>
                 
-                <form method="post" action="{% url 'rent' %}" class="my-8">
+                <form method="post" action="{% url 'rentals:rent' %}" class="my-8">
                   {% csrf_token %}
                     <div class="flex justify-between place-items-center">
                       <label for="id_book">Book Name</label>
@@ -56,14 +56,14 @@
                     <input
                       type="text" 
                       placeholder="Search Book" 
-                      hx-get="{% url 'search' %}"
+                      hx-get="{% url 'rentals:search' %}"
                       name="book" required id="id_book" 
                       hx-target="#htmx-book-search-target"
                       hx-trigger="keyup changed delay:50ms"
-                      hx-disabled-elt="#book-rentage-submit-btn"
                       hx-indicator="#htmx-book-search-indicator"
                       data-dateerrornotifier="htmx-compute-cost"
                       data-sourcedatefield="source_return_date"
+                      hx-disabled-elt="#book-rentage-submit-btn,#source_return_date,#id_student"
                       class="border h-10 border-gray-400 w-full p-1 rounded-sm outline-none bookInputField">
                     
                     <span id="htmx-book-search-indicator" class="htmx-indicator"><small>searching for book... please wait !!</small></span>
@@ -102,7 +102,7 @@
                     </div>
                 </form>
 
-                <form hx-get="{% url 'validate' %}" hx-trigger="submit" hx-target="#htmx-compute-cost" id="htmx_form_validate_price">
+                <form hx-get="{% url 'rentals:validate' %}" hx-trigger="submit" hx-target="#htmx-compute-cost" id="htmx_form_validate_price">
                   <input type="hidden" name="return_date" id="id_price_form_return_date">
                   <input type="hidden" name="book_pages" id="id_price_form_bookpages">
                 </form>
