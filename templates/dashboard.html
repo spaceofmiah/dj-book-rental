@@ -63,6 +63,7 @@
                       hx-indicator="#htmx-book-search-indicator"
                       data-dateerrornotifier="htmx-compute-cost"
                       data-sourcedatefield="source_return_date"
+                      data-bookresultnotifier="htmx-book-search-target"
                       hx-disabled-elt="#book-rentage-submit-btn,#source_return_date,#id_student"
                       class="border h-10 border-gray-400 w-full p-1 rounded-sm outline-none bookInputField">
                     
@@ -238,6 +239,7 @@
           bookInputField.addEventListener('input', function(event) {
             document.getElementById(event.target.dataset['sourcedatefield']).value = null
             document.getElementById(event.target.dataset['dateerrornotifier']).innerHTML = ''
+            document.getElementById(event.target.dataset['bookresultnotifier']).innerHTML = ''
           })
         }
       )
