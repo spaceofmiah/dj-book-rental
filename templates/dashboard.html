@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 {% load static %}
+{% load django_htmx %}
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,8 +11,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Titan+One&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@100..900&display=swap" rel="stylesheet">
     <style>
         * {
@@ -46,20 +46,43 @@
             <div class="w-6/12 rounded-md min-h-[250px] bg-white p-8">
                 <h3 class="text-2xl font-bold text-center">Rent Book</h3>
                 
-                <form method="get" class="my-8">
-                    <input type="text" name="book" required id="id_book" placeholder="Search Book" class="border h-10 border-gray-400 w-full p-1 rounded-sm outline-none">
+                <form method="post" action="{% url 'rent' %}" class="my-8">
+                  {% csrf_token %}
+                    <label for="id_book">Book Name</label>
+                    <input
+                      type="text" 
+                      placeholder="Search Book" 
+                      hx-get="{% url 'search' %}"
+                      name="book" required id="id_book" 
+                      hx-target="#htmx-book-search-target"
+                      hx-trigger="keyup changed delay:50ms"
+                      hx-disabled-elt="#book-rentage-submit-btn"
+                      hx-indicator="#htmx-book-search-indicator"
+                      class="border h-10 border-gray-400 w-full p-1 rounded-sm outline-none">
+                    
+                    <div id="htmx-book-search-target">
+                      <span id="htmx-book-search-indicator" class="htmx-indicator"><small>searching for book... please wait !!</small></span>
+                    </div>
 
                     <div class="flex justify-between place-items-center gap-4 mt-4">
+                      <span>
+                        <label for="id_book">Student Email</label>
                         <input type="email" required name="student" id="id_student" placeholder="Enter student email" class="h-10 border border-gray-400 w-full p-1 rounded-sm outline-none">
-                        <input type="date" required name="month" id="id_month" placeholder="Enter return date" class="h-10 border border-gray-400 w-full p-1 rounded-sm outline-none">
+                      </span>
+
+                      <span>
+                        <label for="id_month">Return Date</label>
+                        <input type="date" required name="return_date" id="id_month" placeholder="Enter return date" class="h-10 border border-gray-400 w-full p-1 rounded-sm outline-none">
+                      </span>
+                    </div>
+
+                    <div class="flex justify-between place-items-center mt-8">
+                      <p class="text-lg text-red-600 font-thin leading-8 closeModal cursor-pointer" data-modal="modal">Cancel</p>
+    
+                      <input type="submit" id="book-rentage-submit-btn" class="text-sm text-purple-800 cursor-pointer flex justify-center place-items-center font-bold h-8 px-2 p-1 rounded-full bg-purple-200 hover:bg-purple-300" value="Submit" />
                     </div>
                 </form>
 
-                <div class="flex justify-between place-items-center">
-                    <p class="text-lg text-red-600 font-thin leading-8 closeModal cursor-pointer" data-modal="modal">Cancel</p>
-
-                    <input type="submit" class="text-sm text-purple-800 cursor-pointer flex justify-center place-items-center font-bold h-8 px-2 p-1 rounded-full bg-purple-200 hover:bg-purple-300" value="Submit" />
-                </div>
             </div>
         </div>
 
@@ -131,7 +154,6 @@
 
       // Function to open modal
       function openModal(target) {
-        console.log(target, "\n\n")
         const modal = document.getElementById(target);
         modal.classList.remove('hidden');
         modalBackdrop.classList.remove('hidden');
@@ -150,7 +172,6 @@
 
       openModalBtn.forEach( btn => {
         btn.addEventListener('click', (event) => {
-            console.log(event.target)
           const targetModal = event.target.dataset['modal']
           openModal(targetModal)
         });
@@ -163,5 +184,7 @@
         });
       })
     </script>
+    <script src="{% static 'htmx.min.js' %}" defer></script>
+    {% django_htmx_script %}
 </body>
 </html>

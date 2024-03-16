@@ -1,0 +1,9 @@
+
+<body>
+    {% if author_name and pages %}
+    <p class="text-xs text-gray-700">Written by {{author_name}} with {{pages}} pages</p>
+    <input type="hidden" name="book_name" value="{{ title }}">
+    {% else %}
+    <p class="text-xs text-red-700">Book not found. Ensure a valid book name is provided</p>
+    {% endif %}
+</body>
