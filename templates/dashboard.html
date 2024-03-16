@@ -43,12 +43,16 @@
         <div id="modalBackdrop" class="fixed inset-0 z-50 bg-black opacity-75 hidden"></div>
 
         <div id="modal" class="fixed inset-0 flex items-center justify-center z-50 overflow-y-auto hidden">
-            <div class="w-6/12 rounded-md min-h-[250px] bg-white p-8">
+            <div class="w-10/12 md:w-6/12 rounded-md min-h-[250px] bg-white p-8">
                 <h3 class="text-2xl font-bold text-center">Rent Book</h3>
                 
                 <form method="post" action="{% url 'rent' %}" class="my-8">
                   {% csrf_token %}
-                    <label for="id_book">Book Name</label>
+                    <div class="flex justify-between place-items-center">
+                      <label for="id_book">Book Name</label>
+                      <div id="htmx-book-search-target"></div>
+                    </div>
+
                     <input
                       type="text" 
                       placeholder="Search Book" 
@@ -58,29 +62,49 @@
                       hx-trigger="keyup changed delay:50ms"
                       hx-disabled-elt="#book-rentage-submit-btn"
                       hx-indicator="#htmx-book-search-indicator"
-                      class="border h-10 border-gray-400 w-full p-1 rounded-sm outline-none">
+                      data-dateerrornotifier="htmx-compute-cost"
+                      data-sourcedatefield="source_return_date"
+                      class="border h-10 border-gray-400 w-full p-1 rounded-sm outline-none bookInputField">
                     
-                    <div id="htmx-book-search-target">
-                      <span id="htmx-book-search-indicator" class="htmx-indicator"><small>searching for book... please wait !!</small></span>
-                    </div>
+                    <span id="htmx-book-search-indicator" class="htmx-indicator"><small>searching for book... please wait !!</small></span>
+                    
 
-                    <div class="flex justify-between place-items-center gap-4 mt-4">
-                      <span>
+                    <div class="block md:flex justify-between place-items-center gap-4 mt-1">
+                      <div class="mb-4 md:mb-0">
                         <label for="id_book">Student Email</label>
                         <input type="email" required name="student" id="id_student" placeholder="Enter student email" class="h-10 border border-gray-400 w-full p-1 rounded-sm outline-none">
-                      </span>
+                      </div>
 
-                      <span>
+                      <div class="flex-1">
                         <label for="id_month">Return Date</label>
-                        <input type="date" required name="return_date" id="id_month" placeholder="Enter return date" class="h-10 border border-gray-400 w-full p-1 rounded-sm outline-none">
-                      </span>
+                        <input 
+                          type="date" 
+                          required
+                          name="return_date"
+                          id="source_return_date"
+                          placeholder="Enter return date" 
+                          data-sourcebookpages="id_bookpages"
+                          data-errortarget="htmx-compute-cost"
+                          data-validateform="htmx-form-validate-cost"
+                          data-targetbookpages="id_price_form_bookpages"
+                          data-validatepriceform="htmx_form_validate_price"
+                          data-targetbookreturndate="id_price_form_return_date"
+                          class="returnDate h-10 border border-gray-400 w-full p-1 rounded-sm outline-none">
+                      </div>
                     </div>
 
-                    <div class="flex justify-between place-items-center mt-8">
-                      <p class="text-lg text-red-600 font-thin leading-8 closeModal cursor-pointer" data-modal="modal">Cancel</p>
-    
-                      <input type="submit" id="book-rentage-submit-btn" class="text-sm text-purple-800 cursor-pointer flex justify-center place-items-center font-bold h-8 px-2 p-1 rounded-full bg-purple-200 hover:bg-purple-300" value="Submit" />
+
+                    <span id="htmx-compute-cost" class="my-2 block"></span>
+
+                    <div class="flex flex-col justify-center place-items-center mt-8">
+                      <input type="submit" id="book-rentage-submit-btn" class="text-sm text-purple-800 cursor-pointer flex justify-center place-items-center font-bold h-8 px-2 p-1 w-32 rounded-full bg-purple-200 hover:bg-purple-300" value="Submit" />
+                      <p class="text-xs text-red-600 font-thin leading-8 closeModal cursor-pointer" data-modal="modal">Cancel</p>
                     </div>
+                </form>
+
+                <form hx-get="{% url 'validate' %}" hx-trigger="submit" hx-target="#htmx-compute-cost" id="htmx_form_validate_price">
+                  <input type="hidden" name="return_date" id="id_price_form_return_date">
+                  <input type="hidden" name="book_pages" id="id_price_form_bookpages">
                 </form>
 
             </div>
@@ -119,7 +143,7 @@
                     </tr>
                   </thead>
 
-                  <tbody class="bg-white divide-y divide-gray-200">
+                  <tbody class="bg-white divide-y divide-gray-200 cursor-pointer">
                     <tr class="hover:bg-gray-100 openModalBtn" data-modal="modal">
                       <td class="py-4 whitespace-nowrap" data-modal="modal">John Doe</td>
                       <td class="py-4 whitespace-nowrap" data-modal="modal">john@example.com</td>
@@ -150,6 +174,7 @@
       const closeModalBtn = document.querySelectorAll('.closeModal');
       const openModalBtn = document.querySelectorAll('.openModalBtn');
       const modalBackdrop = document.getElementById('modalBackdrop');
+
 
 
       // Function to open modal
@@ -183,6 +208,40 @@
           closeModal(targetModal)
         });
       })
+
+      document.querySelectorAll('.returnDate').forEach(returnDate =>
+        {
+          returnDate.addEventListener('change', function(event) {
+          const bookPagesSource = event.target.dataset['sourcebookpages'];
+          const bookPagesTarget = event.target.dataset['targetbookpages'];
+          const errorNotifierTarget = event.target.dataset['errortarget'];
+          const validatePriceForm = event.target.dataset['validatepriceform'];
+          const bookPagesReturnDate = event.target.dataset['targetbookreturndate'];
+          try{
+            console.log("i'm here")
+            document.getElementById(bookPagesTarget).value = document.getElementById(bookPagesSource).value;
+            document.getElementById(bookPagesReturnDate).value = returnDate.value;
+            console.log(validatePriceForm)
+            const validatePriceFormElement = document.getElementById(validatePriceForm)
+            console.log(validatePriceFormElement)
+            htmx.trigger(validatePriceFormElement, 'submit')
+          } catch (error) {
+            console.log(error)
+            let errorTarget = document.getElementById(errorNotifierTarget);
+            errorTarget.innerHTML = `<small class="text-red-600 text-xs">Enter a valid book</small>`
+          }
+        })
+      })
+
+      document.querySelectorAll('.bookInputField').forEach(bookInputField =>
+        {
+          bookInputField.addEventListener('input', function(event) {
+            document.getElementById(event.target.dataset['sourcedatefield']).value = null
+            document.getElementById(event.target.dataset['dateerrornotifier']).innerHTML = ''
+          })
+        }
+      )
+
     </script>
     <script src="{% static 'htmx.min.js' %}" defer></script>
     {% django_htmx_script %}
