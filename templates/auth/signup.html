@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bokr | Login</title>
+    {% include 'includes/headers.html' %}
+</head>
+<body class="bg-slate-100 flex flex-row justify-center place-items-center w-[100vw]  h-[100vh]">
+    <div class="min-h-[250px] w-full h-6/12 text-lg px-8">
+        <a href="{% url 'index' %}" class="cursor-pointer text-4xl font-bold text-purple-400 mb-8 titan">Bokr</a>
+
+        <form method="post" action="{% url 'register' %}" class="w-full gap-5 mt-8 flex flex-col">
+            {% csrf_token %}
+            <div class="md:flex md:flex-row gap-3 md:w-1/2">
+                <div class="md:w-1/2 flex flex-col">
+                    <label for="id_email">Email</label>
+                    <input type="email" required name="email" id="id_email" {% if form %} value="{{form.email.value}}" {% endif %} placeholder="Enter email address" class="w-full h-12 p-2 text-lg bg-white outline-none border border-purple-600 rounded-sm">
+                </div>
+
+                <div class="mt-4 md:mt-0 md:w-1/2 flex flex-col">
+                    <label for="id_name">Name</label>
+                    <input type="text" required name="name" id="id_name" {% if form %} value="{{form.name.value}}" {% endif %} placeholder="Enter full name" class="w-full h-12 p-2 text-lg bg-white outline-none border border-purple-600 rounded-sm">
+                </div>
+            </div>
+
+            <div class="flex flex-col">
+                <label for="id_password">Password</label>
+                <input type="password" required name="password" id="id_password" placeholder="Enter password" class="md:w-1/2 h-12 p-2 text-lg bg-white outline-none border border-purple-600 rounded-sm">
+            </div>
+            
+            {% if error %}
+              <small class="text-sm text-red-500 font-bold"> {{ error }} </small>
+            {% endif %}
+
+            {% if form.errors %}
+                {% for error in form.errors %}
+                    <small class="text-sm text-red-500 font-bold"> {{ error }} </small>
+                {% endfor %}
+            {% endif %}
+
+            <div class="flex justify-between place-items-center md:w-1/2">
+                <input type="submit" value="Register" class="w-[90px] h-12 p-2 text-lg bg-white outline-none border border-purple-600 rounded-sm hover:bg-purple-600 cursor-pointer hover:text-white ">
+
+                <p class="text-sm">
+                    Have an account ? <a href="{% url 'login' %}" class="cursor-pointer font-bold text-purple-400">Login</a>
+                </p>
+            </div>
+
+        </form>
+    </div>
+</body>
+</html>

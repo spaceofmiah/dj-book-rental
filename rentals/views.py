@@ -1,9 +1,39 @@
 from django.http import HttpRequest, HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.shortcuts import render
 from django.utils import timezone
 from django.urls import reverse
 import requests
+
+
+@login_required(redirect_field_name='redirect', login_url='/login')
+def dashboard(request:HttpRequest):
+    return render(request, 'dashboard.html')
+
+
+@login_required(redirect_field_name='redirect', login_url='/login')
+def rent(request:HttpRequest):
+    """
+    Processes book rentage request. This allows a student to rent
+    a book for a specified number of days. 
+
+    Returns a HttpResponseRedirect 
+
+    Query Params:
+    
+    : book_name [str]: Actual book name to be rented (this should be the title from open library)
+
+    : student [str]: Student's email address - this should be a valid email address in the database
+
+    : return date [date str]: A valid date string signifying the date the rentage is to last for.
+    """
+    book_name = request.POST.get('book_name')
+    student = request.POST.get('student')
+    return_date = request.POST.get('return_date')
+    print(book_name, student, return_date)
+    return HttpResponseRedirect(reverse('index'))
+
 
 
 def htmx_book_search(request:HttpRequest):
@@ -31,26 +61,6 @@ def htmx_book_search(request:HttpRequest):
 
     return render(request, 'search.html', {'author_name': author_name, 'pages': pages, 'title':title})
 
-def rent(request:HttpRequest):
-    """
-    Processes book rentage request. This allows a student to rent
-    a book for a specified number of days. 
-
-    Returns a HttpResponseRedirect 
-
-    Query Params:
-    
-    : book_name [str]: Actual book name to be rented (this should be the title from open library)
-
-    : student [str]: Student's email address - this should be a valid email address in the database
-
-    : return date [date str]: A valid date string signifying the date the rentage is to last for.
-    """
-    book_name = request.POST.get('book_name')
-    student = request.POST.get('student')
-    return_date = request.POST.get('return_date')
-    print(book_name, student, return_date)
-    return HttpResponseRedirect(reverse('index'))
 
 def htmx_rentage_price(request:HttpRequest):
     """

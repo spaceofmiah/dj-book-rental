@@ -8,31 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <title>Book Rental | One Stop Shop For Book Renting</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Titan+One&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@100..900&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0px;
-            padding: 0px;
-            box-sizing: border-box;
-            font-family: "Catamaran", sans-serif;
-            font-optical-sizing: auto;
-            font-weight: 400;
-            font-style: normal;
-        }
-
-        body.modal-open {
-            overflow: hidden;
-        }
-        
-        .titan {
-            font-family: "Titan One", sans-serif;
-            font-weight: 400;
-            font-style: normal;
-        }
-    </style>
+    {% include 'includes/headers.html' %}
 </head>
 <body>
     <nav class="flex justify-between place-items-center p-1">
@@ -123,7 +99,7 @@
 
                 <div class="flex flex-col gap-y-3 w-full p-4">
                     <a href="" class="text-sm hover:text-gray-400">Settings <sup>wip</sup></a>
-                    <a href="" class="text-sm text-red-800 font-bold hover:text-red-600">Logout</a>
+                    <a href="{% url 'logout' %}" class="text-sm text-red-800 font-bold hover:text-red-600">Logout</a>
                 </div>
             </div>
         </aside>

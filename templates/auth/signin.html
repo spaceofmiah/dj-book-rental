@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bokr | Login</title>
+    {% include 'includes/headers.html' %}
+</head>
+<body class="bg-slate-100 flex flex-row justify-center place-items-center w-[100vw]  h-[100vh]">
+    <div class="min-h-[250px] w-full h-6/12 text-lg px-8">
+        <a href="{% url 'index' %}" class="cursor-pointer text-4xl font-bold text-purple-400 mb-8 titan">Bokr</a>
+
+        <form method="post" action="{% url 'login' %}" class="w-full gap-5 mt-8 flex flex-col">
+            {% csrf_token %}
+            <div class="flex flex-col">
+                <label for="id_email">Email</label>
+                <input type="email" required name="email" id="id_email" placeholder="Enter your email address" class="md:w-1/2 h-12 p-2 text-lg bg-white outline-none border border-purple-600 rounded-sm">
+            </div>
+
+            <div class="flex flex-col">
+                <label for="id_password">Password</label>
+                <input type="password" required name="password" id="id_password" placeholder="Enter your password" class="md:w-1/2 h-12 p-2 text-lg bg-white outline-none border border-purple-600 rounded-sm">
+            </div>
+            
+            {% if error %}
+              <small class="text-sm text-red-500 font-bold"> {{ error }} </small>
+            {% endif %}
+
+            <div class="flex justify-between place-items-center md:w-1/2">
+                <input type="submit" value="Login" class="w-[90px] h-12 p-2 text-lg bg-white outline-none border border-purple-600 rounded-sm hover:bg-purple-600 cursor-pointer hover:text-white ">
+                <a href="" class="cursor-pointer font-bold text-sm text-purple-400">Forgotten Password ?</a>
+            </div>
+
+            <p class="text-sm">
+                Don't have an account ? <a href="{% url 'register' %}" class="cursor-pointer font-bold text-purple-400">Register</a>
+            </p>
+        </form>
+    </div>
+</body>
+</html>

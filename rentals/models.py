@@ -53,8 +53,17 @@ class Book(models.Model):
         return f"{self.title} by {self.author} ({self.total_pages})"
     
 
+class Student(models.Model):
+    email = models.EmailField(unique=True)
+    name = models.CharField(max_length=30, blank=True)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self) -> str:
+        return self.name
+    
+
 class Rental(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='rentals')
+    user = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='rentals')
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='rentals')
     start_date = models.DateTimeField(blank=False, null=False, auto_now_add=True)
     end_date = models.DateTimeField(blank=False, null=False)
