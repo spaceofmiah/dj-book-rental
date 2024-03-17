@@ -44,9 +44,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     
 
 class Book(models.Model):
+    total_pages = models.IntegerField(blank=False, null=False)
+    cover_i = models.CharField(blank=False, null=False, max_length=225)
     title = models.CharField(blank=False, null=False, max_length=225)
     author = models.CharField(blank=False, null=False, max_length=225)
-    total_pages = models.IntegerField(blank=False, null=False)
 
 
     def __str__(self) -> str:

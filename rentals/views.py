@@ -73,7 +73,6 @@ def books(request:HttpRequest):
     )
     
 
-
 @login_required(redirect_field_name='redirect', login_url='/login')
 def rent(request:HttpRequest):
     """
