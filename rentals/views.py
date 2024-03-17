@@ -62,7 +62,6 @@ def students(request:HttpRequest):
     return HttpResponseRedirect(reverse('rentals:students'))
 
 
-@login_required(redirect_field_name='redirect', login_url='/login')
 def books(request:HttpRequest):
     return render(
         request, 'books.html', 
