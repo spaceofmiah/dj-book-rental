@@ -1,0 +1,61 @@
+{% extends 'structures/dashboard.html' %}
+{% load static %}
+  
+{% block dataarea %}
+  <div class="p-2 md:p-14 container grow">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="text-sm text-center font-bold text-red-500 mb-8">{{message}}</div>
+    {% endfor %}
+    {% endif %}
+
+    {% if form.errors %}
+      {% for field in form %}
+           {% for error in field.errors %}
+            <small class="text-sm text-red-500 font-bold"> {{field.label}}: {{ error|escape }} </small>
+           {% endfor %}
+      {% endfor %}
+    {% endif %}
+    
+
+    <div class="">
+      <div class="flex flex-row justify-between place-items-center mb-12">
+        <h1 class="text-right text-2xl font-bold">Books</h1>
+      </div>
+    </div>
+
+    <div class="relative block overflow-x-scroll shadow-md">
+      <table class="w-full text-sm rtl:text-right text-gray-500">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:text-gray-400">
+          <tr>
+            <th scope="col" class="px-6 py-3">
+              Name
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Author
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Page Count
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for book in books %}
+          <tr class="bg-white text-center border-b hover:bg-gray-100 cursor-pointer">
+            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+              {{book.title}}
+            </th>
+            <td class="px-6 py-4">
+              {{book.author}}
+            </td>
+            <td class="px-6 py-4">
+              {{book.total_pages}}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+{% endblock dataarea %}

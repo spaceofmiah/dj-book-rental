@@ -7,6 +7,7 @@ urlpatterns = [
     path('rentage-price/', views.htmx_rentage_price, name='validate'),
     path('book-search/', views.htmx_book_search, name='search'),
     path('students/', views.students, name='students'),
+    path('books/', views.books, name='books'),
     path('rent/', views.rent, name='rent'),
     path('', views.rentals, name='index'),
 ]

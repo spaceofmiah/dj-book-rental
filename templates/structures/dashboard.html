@@ -23,6 +23,9 @@
             <a href="{% url 'rentals:index' %}"  class="h-14 flex place-items-center  {% if active == 'rentals' %}bg-gray-300 font-bold{% else %} hover:bg-purple-100 {% endif %}" >
                 <span class="text-sm p-4">Rentals</span>
             </a>
+            <a href="{% url 'rentals:books' %}"  class="h-14 flex place-items-center {% if active == 'books' %}bg-gray-300{% else %} hover:bg-purple-100 {% endif %}" >
+              <span class="text-sm p-4">Books</span>
+            </a>
             <a href="{% url 'rentals:students' %}"  class="h-14 flex place-items-center {% if active == 'students' %}bg-gray-300{% else %} hover:bg-purple-100 {% endif %}" >
                 <span class="text-sm p-4">Students</span>
             </a>
