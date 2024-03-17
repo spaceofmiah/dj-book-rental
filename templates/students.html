@@ -1,0 +1,207 @@
+{% extends 'structures/dashboard.html' %}
+{% load static %}
+  
+{% block dataarea %}
+  <div id="modalBackdrop" class="fixed inset-0 z-50 bg-black opacity-75 hidden"></div>
+
+  <div id="newStudentModal" class="fixed inset-0 flex items-center justify-center z-50 overflow-y-auto hidden">
+    <div class="w-10/12 md:w-6/12 rounded-md min-h-[250px] bg-white p-8">
+      <h3 class="text-2xl font-bold text-center">Add New Student</h3>
+
+      <form method="post" action="{% url 'rentals:students' %}" class="my-8">
+        {% csrf_token %}
+        <label for="id_name">Student Name</label>
+        <input type="text" placeholder="Enter Name" name="name" required id="id_name"
+          class="border h-10 border-gray-400 w-full p-1 rounded-sm outline-none bookInputField">
+
+
+        <div class="block place-items-center gap-4 mt-4">
+          <div class="mb-4 md:mb-0 w-full">
+            <div class="flex justify-between place-items-center">
+              <label for="id_book">Student Email</label>
+              <div id="htmx-find-student-target"></div>
+            </div>
+
+            <input type="email" id="id_email" required name="email" placeholder="Enter student email"
+              hx-trigger="keyup changed delay:50ms" hx-target="#htmx-find-student-target"
+              hx-get="{% url 'rentals:find_student' %}?page=students"
+              class="h-10 border border-gray-400 w-full p-1 rounded-sm outline-none">
+          </div>
+        </div>
+
+
+        <span id="htmx-compute-cost" class="my-2 block"></span>
+
+        <div class="flex flex-col justify-center place-items-center mt-8">
+          <button type="submit"
+            class="relative inline-flex items-center outline-none justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white focus:outline-none">
+            <span data-modal="newRentalModal"
+              class="relative outline-none px-5 py-2.5 transition-all ease-in duration-75 bg-white rounded-md group-hover:bg-opacity-0">
+              Add Student
+            </span>
+          </button>
+          <p class="text-xs text-red-600 font-thin leading-8 closeModal cursor-pointer" data-modal="newRentalModal">
+            Close</p>
+        </div>
+      </form>
+
+      <form hx-get="{% url 'rentals:validate' %}" hx-trigger="submit" hx-target="#htmx-compute-cost"
+        id="htmx_form_validate_price">
+        <input type="hidden" name="return_date" id="id_price_form_return_date">
+        <input type="hidden" name="book_pages" id="id_price_form_bookpages">
+      </form>
+
+    </div>
+  </div>
+
+  <div class="p-14 container grow">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="text-sm text-center font-bold text-red-500 mb-8">{{message}}</div>
+    {% endfor %}
+    {% endif %}
+
+    {% if form.errors %}
+      {% for field in form %}
+           {% for error in field.errors %}
+            <small class="text-sm text-red-500 font-bold"> {{field.label}}: {{ error|escape }} </small>
+           {% endfor %}
+      {% endfor %}
+    {% endif %}
+    
+
+    <div class="">
+      <div class="flex flex-row justify-between place-items-center mb-12">
+        <h1 class="text-right text-2xl font-bold">Students</h1>
+
+        <button
+          class="relative inline-flex items-center outline-none justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white focus:outline-none">
+          <span id="openNewStudenModal" data-modal="newStudentModal"
+            class="relative outline-none px-5 py-2.5 transition-all ease-in duration-75 bg-white rounded-md group-hover:bg-opacity-0">
+            New Student
+          </span>
+        </button>
+      </div>
+
+
+    </div>
+
+    <div class="relative block overflow-x-scroll shadow-md">
+      <table class="w-full text-sm rtl:text-right text-gray-500">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:text-gray-400">
+          <tr>
+            <th scope="col" class="px-6 py-3">
+              Name
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Email
+            </th>
+            <th scope="col" class="px-6 py-3">
+              Current Rentage
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for student in students %}
+          <tr class="bg-white text-center border-b hover:bg-gray-100 cursor-pointer">
+            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+              {{student.name}}
+            </th>
+            <td class="px-6 py-4">
+              {{student.email}}
+            </td>
+            <td class="px-6 py-4">
+              {{student.rentals.count}}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+{% endblock dataarea %}
+
+{% block script %}
+  <script>
+
+    // Get modal elements
+    const openNewStudenModal = document.getElementById('openNewStudenModal');
+    const closeModalBtn = document.querySelectorAll('.closeModal');
+    const modalBackdrop = document.getElementById('modalBackdrop');
+
+
+
+    // Function to open modal
+    function openModal(target) {
+      const modal = document.getElementById(target);
+      modal.classList.remove('hidden');
+      modalBackdrop.classList.remove('hidden');
+      document.body.classList.add('modal-open');
+    }
+
+    // Function to close modal
+    function closeModal(target, removeBackdrop = true) {
+      const modal = document.getElementById(target);
+      modal.classList.add('hidden');
+      if (removeBackdrop) {
+        modalBackdrop.classList.add('hidden');
+        document.body.classList.remove('modal-open');
+      }
+    }
+
+
+    openNewStudenModal.addEventListener('click', (event) => {
+      const targetModal = event.target.dataset['modal']
+      openModal(targetModal)
+    });
+
+    // openModalBtn.forEach( btn => {
+    //   btn.addEventListener('click', (event) => {
+    //     const targetModal = event.target.dataset['modal']
+    //     openModal(targetModal)
+    //   });
+    // })
+
+    closeModalBtn.forEach(btn => {
+      btn.addEventListener('click', (event) => {
+        const targetModal = event.target.dataset['modal']
+        closeModal(targetModal)
+      });
+    })
+
+    document.querySelectorAll('.returnDate').forEach(returnDate => {
+      returnDate.addEventListener('change', function (event) {
+        const bookPagesSource = event.target.dataset['sourcebookpages'];
+        const bookPagesTarget = event.target.dataset['targetbookpages'];
+        const errorNotifierTarget = event.target.dataset['errortarget'];
+        const validatePriceForm = event.target.dataset['validatepriceform'];
+        const bookPagesReturnDate = event.target.dataset['targetbookreturndate'];
+        try {
+          console.log("i'm here")
+          document.getElementById(bookPagesTarget).value = document.getElementById(bookPagesSource).value;
+          document.getElementById(bookPagesReturnDate).value = returnDate.value;
+          console.log(validatePriceForm)
+          const validatePriceFormElement = document.getElementById(validatePriceForm)
+          console.log(validatePriceFormElement)
+          htmx.trigger(validatePriceFormElement, 'submit')
+        } catch (error) {
+          console.log(error)
+          let errorTarget = document.getElementById(errorNotifierTarget);
+          errorTarget.innerHTML = `<small class="text-red-600 text-xs">Enter a valid book</small>`
+        }
+      })
+    })
+
+    document.querySelectorAll('.bookInputField').forEach(bookInputField => {
+      bookInputField.addEventListener('input', function (event) {
+        document.getElementById(event.target.dataset['sourcedatefield']).value = null
+        document.getElementById(event.target.dataset['dateerrornotifier']).innerHTML = ''
+        document.getElementById(event.target.dataset['bookresultnotifier']).innerHTML = ''
+      })
+    }
+    )
+
+  </script>
+  <script src="{% static 'htmx.min.js' %}" defer></script>
+{% endblock script %}

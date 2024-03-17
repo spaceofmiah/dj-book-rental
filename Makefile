@@ -1,4 +1,4 @@
-.phony: run serve build logs stop restart migration migrate repl
+.phony: run serve build logs stop restart migrations migrate repl
 
 run:
 	docker compose up
@@ -18,8 +18,8 @@ stop:
 restart:
 	docker compose restart
 
-migration:
-	docker compose exec app sh -c 'poetry run python manage.py makemigration'
+migrations:
+	docker compose exec app sh -c 'poetry run python manage.py makemigrations'
 
 migrate:
 	docker compose exec app sh -c 'poetry run python manage.py migrate'

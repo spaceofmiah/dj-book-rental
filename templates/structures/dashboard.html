@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+{% load static %}
+{% load django_htmx %}
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Book Rental | One Stop Shop For Book Renting</title>
+  {% include 'includes/headers.html' %}
+</head>
+
+<body>
+  <nav class="flex justify-between place-items-center p-1">
+    <a href="{% url 'rentals:index' %}" class="text-4xl font-bold text-purple-400 titan">Bokr</a>
+  </nav>
+
+  <section class="flex flex-row border-t-2 border-gray-200">
+    <aside class="hidden md:block w-48">
+      <div class="fixed h-full bg-gray-100 w-48 flex flex-col justify-between py-24">
+        <div class="flex flex-col">
+            <a href="{% url 'rentals:index' %}"  class="h-14 flex place-items-center  {% if active == 'rentals' %}bg-gray-300 font-bold{% else %} hover:bg-purple-100 {% endif %}" >
+                <span class="text-sm p-4">Rentals</span>
+            </a>
+            <a href="{% url 'rentals:students' %}"  class="h-14 flex place-items-center {% if active == 'students' %}bg-gray-300{% else %} hover:bg-purple-100 {% endif %}" >
+                <span class="text-sm p-4">Students</span>
+            </a>
+            <a href=""  class="h-14 flex place-items-center {% if active == 'analytics' %}bg-gray-300{% else %} hover:bg-purple-100 {% endif %}" >
+                <span class="text-sm p-4">Analytics <sup>wip</sup></span>
+            </a>
+            <a href=""  class="h-14 flex place-items-center {% if active == 'transactions' %}bg-gray-300{% else %} hover:bg-purple-100 {% endif %}" >
+                <span class="text-sm p-4">Transactions <sup>wip</sup></span>
+            </a>
+            <a href=""  class="h-14 flex place-items-center {% if active == 'transactions' %}bg-gray-300{% else %} hover:bg-purple-100 {% endif %}" >
+                <span class="text-sm p-4">Collections <sup>wip</sup></span>
+            </a>
+        </div>
+
+        <div class="flex flex-col gap-y-3 w-full p-4">
+          <a href="" class="text-sm">Settings <sup>wip</sup></a>
+          <a href="{% url 'logout' %}" class="text-sm text-red-800 font-bold hover:text-red-600">Logout</a>
+        </div>
+      </div>
+    </aside>
+
+    {% block dataarea %} {% endblock dataarea %}
+  </section>
+
+
+  {% django_htmx_script %}
+  {% block script %}
+  {% endblock script %}
+</body>
+</html>

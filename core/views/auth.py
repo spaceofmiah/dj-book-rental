@@ -30,7 +30,7 @@ def signin(request:HttpRequest):
         )
 
     login(request, user=user)
-    redirect_to = request.GET.get('redirect', reverse('rentals:dashboard'))
+    redirect_to = request.GET.get('redirect', reverse('rentals:index'))
     return HttpResponseRedirect(redirect_to=redirect_to)
 
 
@@ -66,5 +66,5 @@ def signup(request:HttpRequest):
         return render(request, 'auth/signup.html', {'error': str(e)})
     
     login(request, user=user)
-    redirect_to = request.GET.get('redirect', reverse('rentals:dashboard'))
+    redirect_to = request.GET.get('redirect', reverse('rentals:index'))
     return HttpResponseRedirect(redirect_to=redirect_to)

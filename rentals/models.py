@@ -63,9 +63,10 @@ class Student(models.Model):
     
 
 class Rental(models.Model):
-    user = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='rentals')
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='rentals')
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='rentals')
     start_date = models.DateTimeField(blank=False, null=False, auto_now_add=True)
+    cost = models.DecimalField(max_digits=10, decimal_places=2)
     end_date = models.DateTimeField(blank=False, null=False)
 
     def __str__(self) -> str:

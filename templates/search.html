@@ -1,10 +1,8 @@
+{% if author_name and pages %}
+<p class="text-xs text-gray-700">Written by {{author_name}} ({{pages}}<sub>p</sub>)</p>
+<input type="hidden" name="book_name" value="{{ title }}">
+<input type="hidden" name="bookpages" id="id_bookpages" value="{{pages}}">
+{% else %}
+<p class="text-xs text-red-700">Book not found. Ensure a valid book name is provided</p>
+{% endif %}
 
-<body>
-    {% if author_name and pages %}
-    <p class="text-xs text-gray-700">Written by {{author_name}} ({{pages}}<sub>p</sub>)</p>
-    <input type="hidden" name="book_name" value="{{ title }}">
-    <input type="hidden" name="bookpages" id="id_bookpages" value="{{pages}}">
-    {% else %}
-    <p class="text-xs text-red-700">Book not found. Ensure a valid book name is provided</p>
-    {% endif %}
-</body>
