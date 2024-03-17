@@ -33,6 +33,8 @@ services:
       - .:/app
       - ./scripts/run.sh:/app/run.sh
     entrypoint: sh -c "./scripts/run.sh"
+    depends_on:
+      - db
     expose:
       - 8000
     ports:
