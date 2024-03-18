@@ -26,3 +26,6 @@ migrate:
 
 repl:
 	docker compose exec -it app sh -c 'poetry run python manage.py shell'
+
+ready:
+	poetry run python manage.py check --deploy --settings="core.settings.prod"

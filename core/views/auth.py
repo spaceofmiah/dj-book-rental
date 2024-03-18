@@ -62,7 +62,6 @@ def signup(request:HttpRequest):
         user.set_password(signup_form.cleaned_data['password'])
         user.save()
     except Exception as e:
-        print(str(e))
         return render(request, 'auth/signup.html', {'error': str(e)})
     
     login(request, user=user)

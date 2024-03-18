@@ -38,7 +38,6 @@ def students(request:HttpRequest):
     
     form = forms.NewStudentForm(request.POST)
     if not form.is_valid():
-        print(form.errors)
         return render(
             request,
             'students.html',
