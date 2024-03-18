@@ -1,5 +1,7 @@
 {% if error %}
 <small>{{error}}</small>
 {% else %}
-<small class="text-center text-gray-500 font-extrabold">Rentage Cost ${{price}}</small>
+<small class="text-center text-gray-500 font-extrabold">
+    Rentage Cost ${{price}} <sub>(monthly)</sub>
+</small>
 {% endif %}
