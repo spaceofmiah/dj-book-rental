@@ -71,6 +71,42 @@ def books(request:HttpRequest):
             'active': 'books'
         }
     )
+
+
+@login_required(redirect_field_name='redirect', login_url='/login')
+def extend_rent(request:HttpRequest, id:int):
+    """
+    Processes request to extend book rentage return date.
+
+    Returns HttpResponseRedirect
+
+    Path Param:
+
+    : id [int] -> Rental unique identifier
+    """
+    try:
+        rental:models.Rental = models.Rental.objects.get(id=id)
+    except models.Rental.DoesNotExist:
+        messages.add_message(request, messages.ERROR, 'No rental found with the given id')
+        return HttpResponseRedirect(reverse('rentals:index'))
+    
+    if rental.is_returned:
+        messages.add_message(request, messages.ERROR, 'The book has already been returned')
+        return HttpResponseRedirect(reverse('rentals:index'))
+    
+    form = forms.RentExtensionForm(request.POST)
+    if not form.is_valid():
+        return render(request, 'rentals.html', {'form': form})
+    
+    if form.cleaned_data['date'] < rental.end_date:
+        messages.add_message(request, messages.ERROR, 'Extension date must be after the current return date')
+        return HttpResponseRedirect(reverse('rentals:index'))
+    
+    rental.end_date = form.cleaned_data['date']
+    rental.save()
+
+    messages.add_message(request, messages.SUCCESS, 'Rental extended successfully')
+    return HttpResponseRedirect(reverse('rentals:index'))
     
 
 @login_required(redirect_field_name='redirect', login_url='/login')
@@ -174,15 +210,21 @@ def htmx_book_search(request:HttpRequest):
     : book [str]: The book title which is to be searched for
     """
     try:
-        response = requests.get(f"https://openlibrary.org/search.json?title={request.GET.get('book')}")
-        data = response.json()['docs'][0]
-        title = data['title']
-        author_name = data['author_name'][0]
-        pages = data['number_of_pages_median']
-    except:
-        author_name = None
-        pages = None
-        title = None
+        book:models.Book = models.Book.objects.filter(title__icontains=request.GET.get('book')).first()
+        title = book.title
+        author_name = book.author
+        pages = book.total_pages
+    except (models.Book.DoesNotExist, AttributeError):
+        try:
+            response = requests.get(f"https://openlibrary.org/search.json?title={request.GET.get('book')}")
+            data = response.json()['docs'][0]
+            title = data['title']
+            author_name = data['author_name'][0]
+            pages = data['number_of_pages_median']
+        except:
+            author_name = None
+            pages = None
+            title = None
 
     return render(request, 'search.html', {'author_name': author_name, 'pages': pages, 'title':title})
 
@@ -215,18 +257,42 @@ def htmx_rentage_price(request:HttpRequest):
 
     : num_pages [int]: The number of pages in the book to be rented
     """
-    return_date = request.GET.get('return_date')
-    num_pages = request.GET.get('book_pages')
-    if not return_date or not num_pages:
-        return render(request, 'rentage_cost.html', {'error': "Pricing failed. Ensure all fields are filled"})
+    page = request.GET.get('page', None)
+    if page and page == 'rent_extension':
+        date = timezone.datetime.strptime(request.GET.get('date'), '%Y-%m-%d').date()
+        try:
+            rent_id = int(request.GET.get('rent_id'))
+            rental = models.Rental.objects.get(id=rent_id)
+        except models.Rental.DoesNotExist:
+            return render(request, 'rentage_cost.html', {'error': "Couldn't compute"})
+        
+        if date < rental.end_date:
+            return render(request, 'rentage_cost.html', {'error': "Date < Rental return date"})
+        
+        if date.month == rental.end_date.month:
+            return render(request, 'rentage_cost.html', {'price': 0})
+        
+        try:
+            price = compute_price(date, rental.book.total_pages)
+        except ValueError:
+            return render(request, 'rentage_cost.html', {'error': 'Return date cannot be a past date'})
+        
+        return render(request, 'rentage_cost.html', {'error': None, 'price': price})
     
-    
-    return_date_value = timezone.datetime.strptime(request.GET.get('return_date'), '%Y-%m-%d').date() 
+    else:
 
-    try:
-        price = compute_price(return_date_value, num_pages)
-    except ValueError:
-        return render(request, 'rentage_cost.html', {'error': 'Return date cannot be a past date'})
-    
-    return render(request, 'rentage_cost.html', {'return_date': return_date, 'num_pages': num_pages, 'error': None, 'price': price})
+        return_date = request.GET.get('return_date')
+        num_pages = request.GET.get('book_pages')
+        if not return_date or not num_pages:
+            return render(request, 'rentage_cost.html', {'error': "Pricing failed. Ensure all fields are filled"})
+        
+        
+        return_date_value = timezone.datetime.strptime(request.GET.get('return_date'), '%Y-%m-%d').date() 
+
+        try:
+            price = compute_price(return_date_value, num_pages)
+        except ValueError:
+            return render(request, 'rentage_cost.html', {'error': 'Return date cannot be a past date'})
+        
+        return render(request, 'rentage_cost.html', {'return_date': return_date, 'num_pages': num_pages, 'error': None, 'price': price})
 

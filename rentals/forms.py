@@ -11,3 +11,7 @@ class NewRentalForm(forms.Form):
 class NewStudentForm(forms.Form):
     name = forms.CharField(required=True)
     email = forms.EmailField(required=True)
+
+
+class RentExtensionForm(forms.Form):
+    date = forms.DateField(required=True)

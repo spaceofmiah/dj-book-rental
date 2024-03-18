@@ -68,7 +68,11 @@ class Rental(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='rentals')
     start_date = models.DateTimeField(blank=False, null=False, auto_now_add=True)
     cost = models.DecimalField(max_digits=10, decimal_places=2)
-    end_date = models.DateTimeField(blank=False, null=False)
+    end_date = models.DateField(blank=False, null=False)
 
     def __str__(self) -> str:
         return f"{self.user} rented {self.book} from {self.start_date} to {self.end_date}"
+    
+    @property
+    def is_returned(self) -> bool:
+        return timezone.now().date() > self.end_date
