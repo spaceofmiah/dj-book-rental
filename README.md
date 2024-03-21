@@ -1,6 +1,6 @@
 # dj-book-rental
 
-Live Application: http://34.224.38.214/  which allows students to rent books. Although this project is built as an asssement, the following documentation provides context to the problem that wasn't included in the assessment.
+Live Application: http://34.224.38.214/  which allows students to rent books. Although this project is built as an asssement, the following documentation provides context to the problem.
 
 ## Running Application
 
