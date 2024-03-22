@@ -14,7 +14,7 @@ To run application locally, ensure to have [make](https://leangaurav.medium.com/
 
 - create a `.env` file 
 
-- fill all environment variables contained in `env.example` within `.env` by replacing all `xxxx` with their appropriate values
+- fill all environment variables contained in `env.example` within `.env`. `env.example` already contains dev environment required variable which would work as is
 
 - Open up your terminal and ensure to navigate to the cloned folder
 
